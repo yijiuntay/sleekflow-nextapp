@@ -30,24 +30,16 @@ export default function Home({ data }) {
   });
   const { current } = page;
 
-  const [keyword, setKeyword] = useState("");
   const handleSearchChange = (newValue) => {
-    setKeyword(newValue);
+    const endpoint = defaultEndpoint + `?name=${newValue}`;
+    updatePage({
+      current: endpoint,
+    });
   };
-  const debouncedTriggerFetchContacts = useMemo(
-    () =>
-      debounce((searchValue) => {
-        const endpoint = defaultEndpoint + `?name=${searchValue}`;
-        updatePage({
-          current: endpoint,
-        });
-      }, 500),
+  const debouncedHandleSearchChange = useMemo(
+    () => debounce(handleSearchChange, 500),
     []
   );
-
-  useEffect(() => {
-    debouncedTriggerFetchContacts(keyword);
-  }, [keyword]);
 
   const fetchContacts = async () => {
     try {
@@ -112,7 +104,7 @@ export default function Home({ data }) {
       <main className={styles.main}>
         <div className={styles.searchSection}>
           <h1>Contacts</h1>
-          <SearchBar keyword={keyword} onChange={handleSearchChange} />
+          <SearchBar onChange={debouncedHandleSearchChange} />
         </div>
         <div className={styles.tableSection}>
           <ContactTable fetchedData={results} />

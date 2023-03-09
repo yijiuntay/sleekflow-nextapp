@@ -1,4 +1,4 @@
-export const SearchBar = ({ keyword, onChange }) => {
+export const SearchBar = ({ onChange }) => {
   const BarStyle = {
     width: "20rem",
     background: "#F0F0F0",
@@ -10,7 +10,6 @@ export const SearchBar = ({ keyword, onChange }) => {
     <input
       style={BarStyle}
       key="search-bar"
-      value={keyword}
       placeholder={"Search"}
       onChange={(e) => onChange(e.target.value)}
     />
