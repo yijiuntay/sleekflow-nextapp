@@ -52,7 +52,7 @@ export default function Home({ data }) {
         ...nextData.info,
       });
 
-      updateResults(nextData.results);
+      updateResults(nextData.results || []);
       return;
 
       {
