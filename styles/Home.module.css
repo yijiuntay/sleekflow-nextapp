@@ -1,7 +1,6 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 6rem;
   min-height: 100vh;
 }
@@ -12,4 +11,11 @@
 }
 
 .tableSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.pageSection {
+  display: flex;
+  gap: 20px;
 }

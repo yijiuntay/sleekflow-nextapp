@@ -2,6 +2,10 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
+import { ContactTable } from "../components/ContactTable.jsx";
+import { SearchBar } from "../components/SearchBar.jsx";
+import { useState, useEffect, useMemo } from "react";
+import { debounce } from "lodash";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +22,85 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-  const { results = [] } = data;
+  const { info, results: defaultResults = [] } = data;
+  const [results, updateResults] = useState(defaultResults);
+  const [page, updatePage] = useState({
+    ...info,
+    current: defaultEndpoint,
+  });
+  const { current } = page;
+
+  const [keyword, setKeyword] = useState("");
+  const handleSearchChange = (newValue) => {
+    setKeyword(newValue);
+  };
+  const debouncedTriggerFetchContacts = useMemo(
+    () =>
+      debounce((searchValue) => {
+        const endpoint = defaultEndpoint + `?name=${searchValue}`;
+        updatePage({
+          current: endpoint,
+        });
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    debouncedTriggerFetchContacts(keyword);
+  }, [keyword]);
+
+  const fetchContacts = async () => {
+    try {
+      const res = await fetch(current);
+      const nextData = await res.json();
+
+      console.log("info", nextData.info);
+      updatePage({
+        current,
+        ...nextData.info,
+      });
+
+      updateResults(nextData.results);
+      return;
+
+      {
+        /* if (!nextData.info?.prev) {
+        updateResults(nextData.results);
+        return;
+      }
+
+      updateResults((prev) => {
+        return [...prev, ...nextData.results];
+      }); */
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLoadNext = () => {
+    updatePage((prev) => {
+      return {
+        ...prev,
+        current: page?.next,
+      };
+    });
+  };
+  const handleLoadPrev = () => {
+    updatePage((prev) => {
+      return {
+        ...prev,
+        current: page?.prev,
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (current === defaultEndpoint) return;
+
+    fetchContacts();
+  }, [current]);
+
   return (
     <>
       <Head>
@@ -30,9 +112,15 @@ export default function Home({ data }) {
       <main className={styles.main}>
         <div className={styles.searchSection}>
           <h1>Contacts</h1>
-          {/* search bar */}
+          <SearchBar keyword={keyword} onChange={handleSearchChange} />
         </div>
-        <div className={styles.tableSection}>{/* table */}</div>
+        <div className={styles.tableSection}>
+          <ContactTable fetchedData={results} />
+          <div className={styles.pageSection}>
+            {page?.prev && <button onClick={handleLoadPrev}>Prev page</button>}
+            {page?.next && <button onClick={handleLoadNext}>Next page</button>}
+          </div>
+        </div>
       </main>
     </>
   );
