@@ -46,7 +46,6 @@ export default function Home({ data }) {
       const res = await fetch(current);
       const nextData = await res.json();
 
-      console.log("info", nextData.info);
       updatePage({
         current,
         ...nextData.info,

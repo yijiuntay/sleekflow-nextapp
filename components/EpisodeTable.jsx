@@ -1,13 +1,8 @@
 import { useMemo } from "react";
 import { useTable } from "react-table";
-import { useRouter } from "next/router";
 
-export const ContactTable = ({ fetchedData }) => {
+export const EpisodeTable = ({ fetchedData }) => {
   const data = useMemo(() => fetchedData);
-  const router = useRouter();
-  const handleClickRow = (id) => {
-    router.push("/character/[id]", `/character/${id}`);
-  };
 
   const columns = useMemo(
     () => [
@@ -16,16 +11,12 @@ export const ContactTable = ({ fetchedData }) => {
         accessor: "name", // accessor is the "key" in the data
       },
       {
-        Header: "status",
-        accessor: "status",
+        Header: "air date",
+        accessor: "air_date",
       },
       {
-        Header: "species",
-        accessor: "species",
-      },
-      {
-        Header: "gender",
-        accessor: "gender",
+        Header: "episode",
+        accessor: "episode",
       },
     ],
     []
@@ -58,12 +49,8 @@ export const ContactTable = ({ fetchedData }) => {
       <tbody {...getTableBodyProps()}>
         {rows.map((row) => {
           prepareRow(row);
-
           return (
-            <tr
-              {...row.getRowProps()}
-              onClick={() => handleClickRow(row.original.id)}
-            >
+            <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
                   <td

@@ -1,0 +1,52 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 40px;
+}
+
+.homeButton {
+  margin: 1rem 2rem;
+  width: fit-content;
+}
+
+.headerSection {
+  display: flex;
+  padding: 1rem 2rem;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid white;
+}
+
+@media (max-width: 600px) {
+  .headerSection {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.profileImage {
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .profileImage {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+  gap: 20px;
+}
+
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 2rem;
+  border: 1px solid white;
+}
