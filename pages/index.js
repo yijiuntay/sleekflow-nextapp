@@ -54,6 +54,14 @@ export default function Home({ data }) {
       });
 
       updateResults(nextData.results || []);
+      setPagesArray([
+        ...Array(
+          nextData?.info?.pages - getCurrentPageNumber() + 1 > 7
+            ? 8
+            : nextData?.info?.pages - getCurrentPageNumber() + 1
+        ).keys(),
+      ]);
+      console.log("nextData", nextData);
       setIsLoading(false);
       return;
 
