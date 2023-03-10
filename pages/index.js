@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
 import { ContactTable } from "../components/ContactTable.jsx";
@@ -41,8 +41,10 @@ export default function Home({ data }) {
     []
   );
 
+  const [isLoading, setIsLoading] = useState(false);
   const fetchContacts = async () => {
     try {
+      setIsLoading(true);
       const res = await fetch(current);
       const nextData = await res.json();
 
@@ -52,6 +54,7 @@ export default function Home({ data }) {
       });
 
       updateResults(nextData.results || []);
+      setIsLoading(false);
       return;
 
       {
@@ -70,6 +73,9 @@ export default function Home({ data }) {
   };
 
   const handleLoadNext = () => {
+    if (getCurrentPageNumber() === pagesArray[pagesArray.length - 1] + 1) {
+      setPagesArray(pagesArray.map((i) => i + 8));
+    }
     updatePage((prev) => {
       return {
         ...prev,
@@ -78,12 +84,63 @@ export default function Home({ data }) {
     });
   };
   const handleLoadPrev = () => {
+    if (getCurrentPageNumber() === pagesArray[0] + 1) {
+      setPagesArray(pagesArray.map((i) => i - 8));
+    }
     updatePage((prev) => {
       return {
         ...prev,
         current: page?.prev,
       };
     });
+  };
+
+  const getPageNumber = (increment) => {
+    return current.split("/")[current.split("/").length - 1].includes("page")
+      ? parseInt(
+          current.split("/")[current.split("/").length - 1].split("=")[
+            current.split("/")[current.split("/").length - 1].split("=")
+              .length - 1
+          ]
+        ) + increment
+      : 1 + increment;
+  };
+  {
+    /* const handleLoadPage = (pageNumber) => {
+    let newPage = `${defaultEndpoint}/?page=${pageNumber}`;
+
+    updatePage((prev) => {
+      return {
+        ...prev,
+        current: newPage,
+      };
+    });
+  }; */
+  }
+  const getCurrentPageNumber = () => {
+    return current.split("/")[current.split("/").length - 1].includes("page")
+      ? parseInt(
+          current.split("/")[current.split("/").length - 1].split("=")[
+            current.split("/")[current.split("/").length - 1].split("=")
+              .length - 1
+          ]
+        )
+      : 1;
+  };
+
+  const [pagesArray, setPagesArray] = useState([...Array(8).keys()]);
+  const CurrentPageDisplay = () => {
+    return (
+      <>
+        {pagesArray.map((i) => (
+          <label
+            className={getCurrentPageNumber() === i + 1 ? styles.underline : ""}
+          >
+            {i + 1}
+          </label>
+        ))}
+      </>
+    );
   };
 
   useEffect(() => {
@@ -108,8 +165,17 @@ export default function Home({ data }) {
         <div className={styles.tableSection}>
           <ContactTable fetchedData={results} />
           <div className={styles.pageSection}>
-            {page?.prev && <button onClick={handleLoadPrev}>Prev page</button>}
-            {page?.next && <button onClick={handleLoadNext}>Next page</button>}
+            {page?.prev && (
+              <button disabled={isLoading} onClick={handleLoadPrev}>
+                Prev page
+              </button>
+            )}
+            <CurrentPageDisplay />
+            {page?.next && (
+              <button disabled={isLoading} onClick={handleLoadNext}>
+                Next page
+              </button>
+            )}
           </div>
         </div>
       </main>
