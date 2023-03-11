@@ -7,7 +7,7 @@ export const ContactTable = ({ fetchedData }) => {
   const data = useMemo(() => fetchedData);
   const router = useRouter();
   const handleClickRow = (id) => {
-    router.push("/character/[id]", `/character/${id}`);
+    router.push("/contact/[id]", `/contact/${id}`);
   };
 
   const columns = useMemo(
