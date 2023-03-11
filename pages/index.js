@@ -47,7 +47,6 @@ export default function Home({ data }) {
       setIsLoading(true);
       const res = await fetch(current);
       const nextData = await res.json();
-
       updatePage({
         current,
         ...nextData.info,
@@ -55,13 +54,8 @@ export default function Home({ data }) {
 
       updateResults(nextData.results || []);
       setPagesArray([
-        ...Array(
-          nextData?.info?.pages - getCurrentPageNumber() + 1 > 7
-            ? 8
-            : nextData?.info?.pages - getCurrentPageNumber() + 1
-        ).keys(),
+        ...Array(nextData?.info?.pages > 7 ? 8 : nextData?.info?.pages).keys(),
       ]);
-      console.log("nextData", nextData);
       setIsLoading(false);
       return;
 
@@ -126,14 +120,10 @@ export default function Home({ data }) {
   }; */
   }
   const getCurrentPageNumber = () => {
-    return current.split("/")[current.split("/").length - 1].includes("page")
-      ? parseInt(
-          current.split("/")[current.split("/").length - 1].split("=")[
-            current.split("/")[current.split("/").length - 1].split("=")
-              .length - 1
-          ]
-        )
-      : 1;
+    let searchParams = new URL(current).searchParams;
+    let pageParam = searchParams.get("page");
+
+    return !!pageParam ? parseInt(pageParam) : 1;
   };
 
   const [pagesArray, setPagesArray] = useState([...Array(8).keys()]);
@@ -183,7 +173,7 @@ export default function Home({ data }) {
               </button>
             )}
             <CurrentPageDisplay />
-            {page?.next && (
+            {page?.next && getCurrentPageNumber() < pagesArray.length && (
               <button disabled={isLoading} onClick={handleLoadNext}>
                 Next page
               </button>
