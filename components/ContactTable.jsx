@@ -38,9 +38,9 @@ export const ContactTable = ({ fetchedData }) => {
   return (
     <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
+        {headerGroups.map((headerGroup, i) => (
+          <tr {...headerGroup.getHeaderGroupProps()} key={i}>
+            {headerGroup.headers.map((column, j) => (
               <th
                 {...column.getHeaderProps()}
                 style={{
@@ -49,6 +49,7 @@ export const ContactTable = ({ fetchedData }) => {
                   color: "black",
                   fontWeight: "bold",
                 }}
+                key={j}
               >
                 {column.render("Header")}
               </th>
@@ -57,7 +58,7 @@ export const ContactTable = ({ fetchedData }) => {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, k) => {
           prepareRow(row);
 
           return (
@@ -65,9 +66,14 @@ export const ContactTable = ({ fetchedData }) => {
               {...row.getRowProps()}
               onClick={() => handleClickRow(row.original.id)}
               className={styles.tableRow}
+              key={k}
             >
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+              {row.cells.map((cell, l) => {
+                return (
+                  <td {...cell.getCellProps()} key={l}>
+                    {cell.render("Cell")}
+                  </td>
+                );
               })}
             </tr>
           );

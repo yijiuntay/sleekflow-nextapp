@@ -28,9 +28,9 @@ export const EpisodeTable = ({ fetchedData }) => {
   return (
     <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
+        {headerGroups.map((headerGroup, i) => (
+          <tr {...headerGroup.getHeaderGroupProps()} key={i}>
+            {headerGroup.headers.map((column, j) => (
               <th
                 {...column.getHeaderProps()}
                 style={{
@@ -39,6 +39,7 @@ export const EpisodeTable = ({ fetchedData }) => {
                   color: "black",
                   fontWeight: "bold",
                 }}
+                key={j}
               >
                 {column.render("Header")}
               </th>
@@ -47,11 +48,11 @@ export const EpisodeTable = ({ fetchedData }) => {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, k) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
+            <tr {...row.getRowProps()} key={k}>
+              {row.cells.map((cell, l) => {
                 return (
                   <td
                     {...cell.getCellProps()}
@@ -60,6 +61,7 @@ export const EpisodeTable = ({ fetchedData }) => {
                       border: "solid 1px gray",
                       background: "navy",
                     }}
+                    key={l}
                   >
                     {cell.render("Cell")}
                   </td>
