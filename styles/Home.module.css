@@ -28,3 +28,17 @@
   text-decoration: underline;
   color: aqua;
 }
+
+.tableRow {
+  background: navy;
+}
+
+.tableRow:hover {
+  background: hotpink;
+  cursor: pointer;
+}
+
+.tableRow td {
+  padding: 10px;
+  border: solid 1px gray;
+}

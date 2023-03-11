@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useTable } from "react-table";
 import { useRouter } from "next/router";
+import styles from "@/styles/Home.module.css";
 
 export const ContactTable = ({ fetchedData }) => {
   const data = useMemo(() => fetchedData);
@@ -63,20 +64,10 @@ export const ContactTable = ({ fetchedData }) => {
             <tr
               {...row.getRowProps()}
               onClick={() => handleClickRow(row.original.id)}
+              className={styles.tableRow}
             >
               {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: "10px",
-                      border: "solid 1px gray",
-                      background: "navy",
-                    }}
-                  >
-                    {cell.render("Cell")}
-                  </td>
-                );
+                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}
             </tr>
           );
