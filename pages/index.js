@@ -143,6 +143,7 @@ export default function Home({ data }) {
         {pagesArray.map((i) => (
           <label
             className={getCurrentPageNumber() === i + 1 ? styles.underline : ""}
+            key={i}
           >
             {i + 1}
           </label>
