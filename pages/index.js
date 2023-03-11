@@ -97,16 +97,6 @@ export default function Home({ data }) {
     });
   };
 
-  const getPageNumber = (increment) => {
-    return current.split("/")[current.split("/").length - 1].includes("page")
-      ? parseInt(
-          current.split("/")[current.split("/").length - 1].split("=")[
-            current.split("/")[current.split("/").length - 1].split("=")
-              .length - 1
-          ]
-        ) + increment
-      : 1 + increment;
-  };
   {
     /* const handleLoadPage = (pageNumber) => {
     let newPage = `${defaultEndpoint}/?page=${pageNumber}`;
