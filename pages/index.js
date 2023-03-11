@@ -53,9 +53,7 @@ export default function Home({ data }) {
       });
 
       updateResults(nextData.results || []);
-      setPagesArray([
-        ...Array(nextData?.info?.pages > 7 ? 8 : nextData?.info?.pages).keys(),
-      ]);
+
       setIsLoading(false);
       return;
 
@@ -120,14 +118,19 @@ export default function Home({ data }) {
   const CurrentPageDisplay = () => {
     return (
       <>
-        {pagesArray.map((i) => (
-          <label
-            className={getCurrentPageNumber() === i + 1 ? styles.underline : ""}
-            key={i}
-          >
-            {i + 1}
-          </label>
-        ))}
+        {pagesArray.map(
+          (i) =>
+            i + 1 <= page.pages && (
+              <label
+                className={
+                  getCurrentPageNumber() === i + 1 ? styles.underline : ""
+                }
+                key={i}
+              >
+                {i + 1}
+              </label>
+            )
+        )}
       </>
     );
   };
@@ -163,7 +166,7 @@ export default function Home({ data }) {
               </button>
             )}
             <CurrentPageDisplay />
-            {page?.next && getCurrentPageNumber() < pagesArray.length && (
+            {page?.next && (
               <button disabled={isLoading} onClick={handleLoadNext}>
                 Next page
               </button>
